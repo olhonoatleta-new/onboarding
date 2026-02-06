@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - Olho no Atleta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a2e2e 0%, #041a1a 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            z-index: 1000;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7ed321 0%, #b8ff3d 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Screen Base */
+        .screen {
+            display: none;
+            animation: fadeIn 0.6s ease;
+            padding-top: 40px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo */
+        .welcome-logo {
+            width: 250px;
+            height: 250px;
+            margin: 60px auto 40px;
+            display: block;
+            filter: drop-shadow(0 0 50px rgba(126, 211, 33, 0.6));
+            border-radius: 50%;
+        }
+
+        .mini-logo {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            z-index: 999;
+            filter: drop-shadow(0 0 20px rgba(126, 211, 33, 0.4));
+            border-radius: 50%;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #7ed321 0%, #b8ff3d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #95e86f;
+            margin-bottom: 50px;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #7ed321 0%, #95e86f 100%);
+            color: #0a2e2e;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(126, 211, 33, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(126, 211, 33, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #7ed321;
+            color: #7ed321;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(126, 211, 33, 0.1);
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #b8ff3d;
+        }
+
+        /* Flow Cards */
+        .flow-container {
+            display: grid;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .flow-card {
+            background: rgba(126, 211, 33, 0.05);
+            border: 2px solid rgba(126, 211, 33, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .flow-card:hover {
+            border-color: #7ed321;
+            background: rgba(126, 211, 33, 0.1);
+        }
+
+        .flow-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #7ed321 0%, #95e86f 100%);
+            color: #0a2e2e;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .flow-title {
+            font-size: 1.3em;
+            color: #b8ff3d;
+            margin-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        .flow-text {
+            color: #95e86f;
+            line-height: 1.6;
+        }
+
+        /* Checklist */
+        .checklist {
+            margin: 30px 0;
+        }
+
+        .checklist-item {
+            background: rgba(126, 211, 33, 0.05);
+            border: 2px solid rgba(126, 211, 33, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            border-color: #7ed321;
+        }
+
+        .checklist-item.checked {
+            background: rgba(126, 211, 33, 0.15);
+            border-color: #7ed321;
+        }
+
+        .checkbox {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #7ed321;
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item.checked .checkbox {
+            background: #7ed321;
+        }
+
+        .checkbox::after {
+            content: '✓';
+            color: #0a2e2e;
+            font-size: 1.2em;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .checklist-item.checked .checkbox::after {
+            opacity: 1;
+        }
+
+        .checklist-text {
+            flex: 1;
+            color: #95e86f;
+            font-size: 1.05em;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(126, 211, 33, 0.05);
+            border: 2px solid rgba(126, 211, 33, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: #7ed321;
+            transform: translateY(-5px);
+        }
+
+        .info-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .info-title {
+            font-size: 1.2em;
+            color: #b8ff3d;
+            margin-bottom: 10px;
+        }
+
+        .info-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #7ed321;
+            margin-bottom: 10px;
+        }
+
+        .info-detail {
+            color: #95e86f;
+            font-size: 0.95em;
+        }
+
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .comparison-card {
+            background: rgba(126, 211, 33, 0.05);
+            border: 2px solid rgba(126, 211, 33, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .comparison-title {
+            font-size: 1.3em;
+            color: #b8ff3d;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #95e86f;
+        }
+
+        .comparison-icon {
+            color: #7ed321;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+            margin: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #7ed321 0%, rgba(126, 211, 33, 0.3) 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -42px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background: #7ed321;
+            border-radius: 50%;
+            border: 4px solid #0a2e2e;
+        }
+
+        .timeline-content {
+            background: rgba(126, 211, 33, 0.05);
+            border: 2px solid rgba(126, 211, 33, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .timeline-title {
+            color: #b8ff3d;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .timeline-text {
+            color: #95e86f;
+        }
+
+        /* Rules Grid */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .rules-card {
+            background: rgba(126, 211, 33, 0.05);
+            border: 2px solid rgba(126, 211, 33, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .rules-card.positive {
+            border-color: rgba(126, 211, 33, 0.5);
+        }
+
+        .rules-card.negative {
+            border-color: rgba(255, 77, 77, 0.5);
+        }
+
+        .rules-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .rules-icon {
+            font-size: 2em;
+        }
+
+        .rules-title {
+            font-size: 1.3em;
+            color: #b8ff3d;
+        }
+
+        .rules-list {
+            list-style: none;
+        }
+
+        .rules-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #95e86f;
+            border-bottom: 1px solid rgba(126, 211, 33, 0.1);
+        }
+
+        .rules-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rules-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #7ed321;
+            font-weight: 700;
+        }
+
+        .rules-card.negative .rules-list li::before {
+            content: '✗';
+            color: #ff4d4d;
+        }
+
+        /* Contact Card */
+        .contact-card {
+            background: linear-gradient(135deg, rgba(126, 211, 33, 0.1) 0%, rgba(126, 211, 33, 0.05) 100%);
+            border: 2px solid #7ed321;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .contact-title {
+            font-size: 1.5em;
+            color: #b8ff3d;
+            margin-bottom: 25px;
+        }
+
+        .contact-info {
+            font-size: 1.2em;
+            color: #95e86f;
+            margin-bottom: 15px;
+        }
+
+        .contact-info strong {
+            color: #7ed321;
+        }
+
+        .input-placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(126, 211, 33, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            color: #7ed321;
+            font-style: italic;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .nav-buttons .btn {
+            flex: 1;
+            margin: 0;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(126, 211, 33, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: #7ed321;
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(184, 255, 61, 0.1);
+            border-left: 4px solid #b8ff3d;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box strong {
+            color: #b8ff3d;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .comparison,
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Mini Logo (appears on all screens except welcome) -->
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='85' fill='%230a2e2e' stroke='%237ed321' stroke-width='6'/%3E%3Ctext x='100' y='102' text-anchor='middle' fill='%23b8ff3d' font-size='38' font-weight='bold' font-family='Arial, sans-serif'%3EOLHO%3C/text%3E%3Ctext x='100' y='125' text-anchor='middle' fill='%237ed321' font-size='20' font-weight='600' font-family='Arial, sans-serif'%3ENO ATLETA%3C/text%3E%3C/svg%3E" alt="Olho no Atleta" class="mini-logo" id="miniLogo" style="display: none;">
+
+    <div class="container">
+        <!-- Screen 0: Welcome -->
+        <div class="screen active" id="screen0">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3CradialGradient id='glow' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' style='stop-color:%237ed321;stop-opacity:0.4'/%3E%3Cstop offset='100%25' style='stop-color:%237ed321;stop-opacity:0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='95' fill='url(%23glow)'/%3E%3Ccircle cx='100' cy='100' r='85' fill='%230a2e2e' stroke='%237ed321' stroke-width='6'/%3E%3Ctext x='100' y='102' text-anchor='middle' fill='%23b8ff3d' font-size='38' font-weight='bold' font-family='Arial, sans-serif'%3EOLHO%3C/text%3E%3Ctext x='100' y='125' text-anchor='middle' fill='%237ed321' font-size='20' font-weight='600' font-family='Arial, sans-serif'%3ENO ATLETA%3C/text%3E%3C/svg%3E" alt="Olho no Atleta" class="welcome-logo">
+            
+            <h1>Bem-vindo ao Time! 🏃‍♂️📸</h1>
+            <p class="subtitle">
+                Liberdade para criar. Autonomia para crescer.<br>
+                A plataforma que conecta você aos atletas de forma simples.
+            </p>
+
+            <button class="btn" onclick="nextScreen()">Começar Onboarding</button>
+        </div>
+
+        <!-- Screen 1: Como Funciona -->
+        <div class="screen" id="screen1">
+            <div class="step-indicator">
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <h2 class="section-title">Como Funciona</h2>
+
+            <div class="flow-container">
+                <div class="flow-card">
+                    <div class="flow-number">1</div>
+                    <h3 class="flow-title">Cadastro na Banlek</h3>
+                    <p class="flow-text">Você se cadastra em banlek.com e preenche a sessão financeiro para poder se inscrever nos eventos</p>
+                </div>
+
+                <div class="flow-card">
+                    <div class="flow-number">2</div>
+                    <h3 class="flow-title">Envio de Confirmação</h3>
+                    <p class="flow-text">Após cadastro, envie o email cadastrado via WhatsApp para Tiago. Você receberá avisos sobre novos eventos e oportunidades</p>
+                </div>
+
+                <div class="flow-card">
+                    <div class="flow-number">3</div>
+                    <h3 class="flow-title">Escolha Seus Eventos</h3>
+                    <p class="flow-text">Acesse sua conta Banlek e veja os treinos e corridas disponíveis. Inscreva-se nos que quiser cobrir</p>
+                </div>
+
+                <div class="flow-card">
+                    <div class="flow-number">4</div>
+                    <h3 class="flow-title">Cobertura e Upload</h3>
+                    <p class="flow-text">Fotografe o evento, entre no álbum correspondente e faça upload das fotos dentro do prazo estabelecido</p>
+                </div>
+
+                <div class="flow-card">
+                    <div class="flow-number">5</div>
+                    <h3 class="flow-title">Receba Automaticamente</h3>
+                    <p class="flow-text">Pagamento D+1 via Banlek. Saque quando quiser, sem burocracias</p>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Voltar</button>
+                <button class="btn" onclick="nextScreen()">Próximo: Primeiros Passos</button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Primeiros Passos -->
+        <div class="screen" id="screen2">
+            <div class="step-indicator">
+                <div class="step-dot"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <h2 class="section-title">Checklist: Primeiros Passos</h2>
+
+            <p class="subtitle" style="margin-bottom: 30px;">Marque cada item conforme completar:</p>
+
+            <div class="checklist">
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">
+                        <strong>Cadastro na Banlek</strong><br>
+                        Acesse banlek.com e crie sua conta
+                    </div>
+                </div>
+
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">
+                        <strong>Preencher Sessão Financeiro</strong><br>
+                        Complete seus dados de pagamento na Banlek para poder se inscrever em eventos
+                    </div>
+                </div>
+
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">
+                        <strong>Enviar Email Cadastrado</strong><br>
+                        Envie seu email cadastrado via WhatsApp para Tiago: (19) 99742-4034
+                    </div>
+                </div>
+
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">
+                        <strong>Entrar no Grupo WhatsApp</strong><br>
+                        Aguarde o convite do grupo da sua região
+                    </div>
+                </div>
+
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">
+                        <strong>Solicitar Camiseta</strong><br>
+                        Faça seu pedido para receber sua camiseta profissional
+                    </div>
+                </div>
+
+                <div class="checklist-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div class="checklist-text">
+                        <strong>Verificar Equipamento</strong><br>
+                        Confirme que possui câmera DSLR ou Mirrorless
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>⚡ IMPORTANTE:</strong> Você precisa completar a sessão financeiro na Banlek ANTES de se inscrever em qualquer evento. Sem isso, não conseguirá participar das coberturas.
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Voltar</button>
+                <button class="btn" onclick="nextScreen()">Próximo: Equipamentos</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Equipamentos -->
+        <div class="screen" id="screen3">
+            <div class="step-indicator">
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <h2 class="section-title">Equipamento & Requisitos</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">📷</div>
+                    <h3 class="info-title">Equipamento</h3>
+                    <p class="info-value">DSLR/Mirrorless</p>
+                    <p class="info-detail">Celular NÃO é aceito</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">📸</div>
+                    <h3 class="info-title">Produção Mínima</h3>
+                    <p class="info-value">~2.500</p>
+                    <p class="info-detail">Fotos por evento (varia conforme tamanho)</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">⏱️</div>
+                    <h3 class="info-title">Prazo Treinos</h3>
+                    <p class="info-value">9h</p>
+                    <p class="info-detail">Fotos no ar até às 9h após o evento</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">🏃</div>
+                    <h3 class="info-title">Prazo Corridas</h3>
+                    <p class="info-value">11h</p>
+                    <p class="info-detail">Fotos no ar até às 11h após o evento</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>💡 IMPORTANTE SOBRE PRAZOS:</strong> Os horários 9h (treinos) e 11h (corridas) são os horários em que as fotos devem estar DISPONÍVEIS NO AR, não o prazo para fazer upload. Planeje seu tempo de upload e processamento considerando esse deadline. O horário exato sempre estará no card do evento.
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Durante o Evento</h4>
+                        <p class="timeline-text">Posicione-se em pontos estratégicos. Seja cordial com os atletas. Mantenha postura profissional com seus pares. Delete fotos ruins e desfocadas direto na câmera durante a captura.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Após o Evento</h4>
+                        <p class="timeline-text">Você poderá fazer a edição que achar mais adequada, sempre pensando no prazo para entrega.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Upload na Banlek</h4>
+                        <p class="timeline-text">Acesse o álbum do evento e envie todas as fotos. Confirme que o upload foi concluído.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Fotos no Ar</h4>
+                        <p class="timeline-text">TREINOS: fotos devem estar disponíveis até às 9h após o evento. CORRIDAS: até às 11h. Verifique o card do evento para confirmar horário exato.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Voltar</button>
+                <button class="btn" onclick="nextScreen()">Próximo: Camisetas</button>
+            </div>
+        </div>
+
+        <!-- Screen 4: Coletes -->
+        <div class="screen" id="screen4">
+            <div class="step-indicator">
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <h2 class="section-title">Sistema de Camisetas</h2>
+
+            <div class="comparison-card" style="max-width: 600px; margin: 0 auto 30px;">
+                <h3 class="comparison-title">🌎 Solicitação de Camiseta</h3>
+                <div class="comparison-item">
+                    <span class="comparison-icon">✓</span>
+                    <span>Faça o pedido aqui</span>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">✓</span>
+                    <span>Recebe em casa</span>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">✓</span>
+                    <span>Investimento do fotógrafo</span>
+                </div>
+                <div class="comparison-item">
+                    <span class="comparison-icon">✓</span>
+                    <span>É sua permanentemente (não precisa devolver)</span>
+                </div>
+            </div>
+
+            <a href="https://mont.ink/paixaonopeito" target="_blank" class="btn" style="text-decoration: none;">
+                Solicitar Camiseta
+            </a>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">👕</div>
+                    <h3 class="info-title">Tolerância Inicial</h3>
+                    <p class="info-value">3 eventos</p>
+                    <p class="info-detail">Você pode fotografar sem camiseta até 3 coberturas</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">⚡</div>
+                    <h3 class="info-title">Após 3 Eventos</h3>
+                    <p class="info-value">Obrigatório</p>
+                    <p class="info-detail">Camiseta é essencial para visibilidade profissional</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <h3 class="info-title">Propriedade</h3>
+                    <p class="info-value">É sua!</p>
+                    <p class="info-detail">Não precisa devolver se parar de fotografar</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>👕 IMPORTANTE:</strong> A camiseta identifica você como fotógrafo oficial do Olho no Atleta. Ela transmite profissionalismo e credibilidade para atletas e organizadores. Providencie o quanto antes!
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Voltar</button>
+                <button class="btn" onclick="nextScreen()">Próximo: Pagamentos</button>
+            </div>
+        </div>
+
+        <!-- Screen 5: Pagamentos -->
+        <div class="screen" id="screen5">
+            <div class="step-indicator">
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <h2 class="section-title">Como Funciona o Pagamento</h2>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">💰</div>
+                    <h3 class="info-title">Sistema</h3>
+                    <p class="info-value">Automático</p>
+                    <p class="info-detail">Via Banlek, sem intermediários</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">📅</div>
+                    <h3 class="info-title">Disponibilidade</h3>
+                    <p class="info-value">D+1</p>
+                    <p class="info-detail">Saldo de hoje disponível amanhã</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">🏦</div>
+                    <h3 class="info-title">Saque</h3>
+                    <p class="info-value">Quando Quiser</p>
+                    <p class="info-detail">Sem restrições ou burocracias</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">📊</div>
+                    <h3 class="info-title">Comissão</h3>
+                    <p class="info-value" style="font-size: 1.3em;">Semana: 82%</p>
+                    <p class="info-detail" style="margin-bottom: 8px;">R$ 13,04 pra você (Seg-Sex)</p>
+                    <p class="info-value" style="font-size: 1.3em;">Fim de semana: 75%</p>
+                    <p class="info-detail">R$ 11,92 pra você (Sáb-Dom)<br><small>Volume maior compensa a comissão</small></p>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Hoje: Evento Acontece</h4>
+                        <p class="timeline-text">Você fotografa o evento e faz upload das fotos no prazo</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Vendas Acontecem</h4>
+                        <p class="timeline-text">Atletas compram suas fotos através da Banlek</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Amanhã: Saldo Disponível</h4>
+                        <p class="timeline-text">Valor das vendas já está na sua conta Banlek para saque</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4 class="timeline-title">Você Decide</h4>
+                        <p class="timeline-text">Saque imediatamente ou acumule para sacar depois</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rules-card positive">
+                <div class="rules-header">
+                    <span class="rules-icon">✓</span>
+                    <h3 class="rules-title">Sem Taxas Ocultas</h3>
+                </div>
+                <ul class="rules-list">
+                    <li>Reconhecimento facial GRATUITO</li>
+                    <li>Reconhecimento numérico GRATUITO</li>
+                    <li>Sem taxa de cadastro</li>
+                    <li>Sem mensalidade</li>
+                    <li>Você recebe por foto vendida, simples assim</li>
+                </ul>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Voltar</button>
+                <button class="btn" onclick="nextScreen()">Próximo: Regras</button>
+            </div>
+        </div>
+
+        <!-- Screen 6: Regras -->
+        <div class="screen" id="screen6">
+            <div class="step-indicator">
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <h2 class="section-title">Regras de Permanência</h2>
+
+            <div class="rules-grid">
+                <div class="rules-card positive">
+                    <div class="rules-header">
+                        <span class="rules-icon">✓</span>
+                        <h3 class="rules-title">O Que Mantém Você</h3>
+                    </div>
+                    <ul class="rules-list">
+                        <li>Cumprir prazos de entrega</li>
+                        <li>Seguir protocolos técnicos</li>
+                        <li>Respeitar organização e pares</li>
+                        <li>Conduta ética e profissional</li>
+                        <li>Comunicação transparente</li>
+                    </ul>
+                </div>
+
+                <div class="rules-card negative">
+                    <div class="rules-header">
+                        <span class="rules-icon">✗</span>
+                        <h3 class="rules-title">O Que Remove Você</h3>
+                    </div>
+                    <ul class="rules-list">
+                        <li>Descumprimento contínuo de prazos</li>
+                        <li>Não seguir protocolos de forma reincidente</li>
+                        <li>Falta de respeito com pares</li>
+                        <li>Desvio moral ou ético</li>
+                        <li>Não comparecimento sem aviso prévio</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>⚡ NÃO HÁ PERÍODO DE TESTE:</strong> Você entra direto com as mesmas condições de todos. Confiança desde o início, responsabilidade desde o início.
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">💬</div>
+                    <h3 class="info-title">Comunicação</h3>
+                    <p class="info-detail">Dúvidas? Pergunte no grupo.<br>Problemas? Avise imediatamente.<br>Não pode ir? Comunique antes.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">🤝</div>
+                    <h3 class="info-title">Transparência</h3>
+                    <p class="info-detail">Transparência e comunicação constroem confiança. Mantenha sempre o diálogo aberto.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">⚡</div>
+                    <h3 class="info-title">Profissionalismo</h3>
+                    <p class="info-detail">Seja pontual, entregue no prazo, respeite todos. Qualidade sempre.</p>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Voltar</button>
+                <button class="btn" onclick="nextScreen()">Próximo: Contatos</button>
+            </div>
+        </div>
+
+        <!-- Screen 7: Final -->
+        <div class="screen" id="screen7">
+            <div class="step-indicator">
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot active"></div>
+            </div>
+
+            <h2 class="section-title">Você Está Pronto! 🎉</h2>
+
+            <p class="subtitle">
+                Agora você faz parte do time Olho no Atleta.<br>
+                Profissionalismo, respeito e resultado. Vamos nessa! 🏃‍♂️📸
+            </p>
+
+            <div class="contact-card">
+                <h3 class="contact-title">📱 Contato Direto</h3>
+                <p class="contact-info">
+                    <strong>Tiago</strong>
+                </p>
+                <p class="contact-info">
+                    WhatsApp: <strong>(19) 99742-4034</strong>
+                </p>
+                <p class="contact-info">
+                    Email: <strong>contato@tiagobarros.com.br</strong>
+                </p>
+            </div>
+
+            <div class="input-placeholder">
+                📱 Link do Grupo WhatsApp da sua região:<br>
+                <strong>[INSERIR LINK DO GRUPO AQUI]</strong>
+            </div>
+
+            <div class="highlight-box">
+                <strong>🎯 PRÓXIMOS PASSOS IMEDIATOS:</strong><br><br>
+                1️⃣ Acesse banlek.com e complete seu cadastro<br>
+                2️⃣ Preencha a sessão financeiro<br>
+                3️⃣ Envie seu email cadastrado para Tiago via WhatsApp<br>
+                4️⃣ Aguarde convite do grupo da sua região<br>
+                5️⃣ Solicite sua camiseta<br>
+                6️⃣ Veja os eventos disponíveis e se inscreva no primeiro!
+            </div>
+
+            <div class="flow-card" style="margin-top: 30px;">
+                <h3 class="flow-title">💡 Lembre-se</h3>
+                <p class="flow-text">
+                    • Os eventos estarão sempre atualizados na Banlek<br>
+                    • Avisos importantes virão pelo grupo do WhatsApp<br>
+                    • Confirmações e documentos por email<br>
+                    • Dúvidas? Pergunte no grupo ou chame direto<br>
+                    • Conforme você avança, receberá novas orientações e oportunidades
+                </p>
+            </div>
+
+            <button class="btn" onclick="location.reload()">Revisar Onboarding</button>
+            <button class="btn btn-secondary" onclick="prevScreen()">Voltar</button>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 0;
+        const totalScreens = 8;
+
+        function updateProgress() {
+            const progress = (currentScreen / (totalScreens - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showScreen(index) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById('screen' + index).classList.add('active');
+            currentScreen = index;
+            updateProgress();
+            
+            // Show/hide mini logo
+            const miniLogo = document.getElementById('miniLogo');
+            if (index === 0) {
+                miniLogo.style.display = 'none';
+            } else {
+                miniLogo.style.display = 'block';
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextScreen() {
+            if (currentScreen < totalScreens - 1) {
+                showScreen(currentScreen + 1);
+            }
+        }
+
+        function prevScreen() {
+            if (currentScreen > 0) {
+                showScreen(currentScreen - 1);
+            }
+        }
+
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
